@@ -8,3 +8,5 @@ suppressMessages({
   library(redist)
   library(alarmdata)
 })
+
+dir_create(here('data/enumpart'))
