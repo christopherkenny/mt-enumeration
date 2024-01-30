@@ -1,5 +1,6 @@
 mt <- alarm_50state_map('MT') |> 
   group_by(county) |> 
+  `attr<-`('existing_col', NULL) |> 
   summarize(
     across(where(is.numeric), sum)
   )
@@ -16,8 +17,8 @@ redist.run.enumpart(
   ordered_path   = 'data/enumpart/op',
   weight_path    = 'data/enumpart/wt',
   out_path       = 'data/enumpart/en',
-  lower = floor(0.99 * sum(mt$pop) / 2),
-  upper = ceiling(1.01 * sum(mt$pop) / 2),
+  lower = floor(0.9975 * sum(mt$pop) / 2),
+  upper = ceiling(1.0025 * sum(mt$pop) / 2),
   ndists = 2
 )
 

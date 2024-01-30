@@ -7,6 +7,4 @@ suppressMessages({
   # alarm project ----
   library(redist)
   library(alarmdata)
-  
-
 })
