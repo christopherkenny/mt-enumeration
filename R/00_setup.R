@@ -2,7 +2,6 @@ suppressMessages({
   # general purpose ----
   library(here)
   library(tidyverse)
-  library(cli)
   library(fs)
   
   # alarm project ----
@@ -11,7 +10,3 @@ suppressMessages({
   
 
 })
-
-lapply(Sys.glob(here("R/utils/*.R")), source)
-
-cli_alert_success("Packages loaded and utilities prepared.")
