@@ -29,19 +29,6 @@ redist.run.enumpart(
   ndists = 2
 )
 
-# to read the plans into memory
-x <- redist.read.enumpart(
-  out_path       = 'data/enumpart/en',
-  # up to 10k to start
-  n_max = 1e4
-)
-
-# to create a redist_plans object with `x`
-# pl <- redist_plans(
-#   x, map = mt, algorithm = 'enumpart'
-# )
-
-
 # Started
 # Reading "data/enumpart/op.dat" ... done in 0.00s elapsed, 0.00s user, 4MB.
 # #vertex = 56, #edge = 138
@@ -54,3 +41,43 @@ x <- redist.read.enumpart(
 # Reduction .......... <6087> in 0.00s elapsed, 0.00s user, 8MB.
 # #node = 6087, #solution = 7012136966
 # lower = 536691, upper = 547534
+
+
+# to read the plans into memory
+x <- redist.read.enumpart(
+  out_path       = 'data/enumpart/en',
+  # up to 10k to start
+  n_max = 1e4
+)
+
+# to read the plans into memory
+enum <- read_delim(
+  file = 'data/enumpart/en.dat', delim = ' ',
+  col_types = cols(.default = col_integer()), col_names = FALSE
+) |> 
+  t()
+rownames(enum) <- NULL
+
+# to create a redist_plans object with `enum`
+plans <- redist_plans(
+  plans = enum, map = mt |> `attr<-`('ndists', 2), algorithm = 'enumpart'
+) 
+
+plans <- plans |> 
+  group_by(draw) |> 
+  mutate(
+    pop_range = max(total_pop) - min(total_pop)
+  ) |> 
+  ungroup()
+
+# output 1 population plans ----
+
+plans_sub <- plans |> 
+  filter(pop_range == 1)
+
+plans_sub |> 
+  get_plans_matrix() |> 
+  t() |> 
+  as.data.frame() |> 
+  setNames(nm = mt$county |> str_remove(' County')) |> 
+  write_delim('data/enumerated_1_pop_plans.txt')
